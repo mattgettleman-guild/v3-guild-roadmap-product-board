@@ -3,8 +3,6 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
-const backendPort = process.env.PORT || 5000;
-
 export default defineConfig({
   plugins: [
     TanStackRouterVite({
@@ -21,7 +19,7 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       "/api": {
-        target: `http://localhost:${backendPort}`,
+        target: "http://127.0.0.1:3001",
         changeOrigin: true,
       },
     },
