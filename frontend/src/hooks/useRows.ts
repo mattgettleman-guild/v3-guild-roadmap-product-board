@@ -14,7 +14,39 @@ export function useUpdateRow() {
   return useMutation({
     mutationFn: ({ id, body }: { id: string; body: Partial<RoadmapRow> }) =>
       api.updateRow(id, body),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["rows"] }),
+
+    // Optimistic update — immediately reflect the change in the UI
+    onMutate: async ({ id, body }) => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
+      await qc.cancelQueries({ queryKey: ["rows"] });
+
+      // Snapshot the previous value
+      const previous = qc.getQueryData<RoadmapRow[]>(["rows"]);
+
+      // Optimistically update the cache
+      if (previous) {
+        qc.setQueryData<RoadmapRow[]>(
+          ["rows"],
+          previous.map((row) =>
+            row.id === id ? { ...row, ...body, updatedAt: new Date().toISOString() } : row,
+          ),
+        );
+      }
+
+      return { previous };
+    },
+
+    // If the mutation fails, roll back to the previous value
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        qc.setQueryData(["rows"], context.previous);
+      }
+    },
+
+    // After success or error, refetch to ensure server state is accurate
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["rows"] });
+    },
   });
 }
 

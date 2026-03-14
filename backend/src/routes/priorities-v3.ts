@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../lib/db.js";
 import { productPriorities, roadmapRows } from "../lib/schema.js";
 import { requireRole } from "../lib/auth.js";
+import OpenAI from "openai";
 
 export const prioritiesV3Router = Router();
 
@@ -180,7 +181,7 @@ prioritiesV3Router.delete("/:id", requireRole("admin"), async (req, res) => {
   }
 });
 
-// POST /api/priorities/v3/:id/generate-summary — AI summary stub
+// POST /api/priorities/v3/:id/generate-summary — AI-powered priority summary
 prioritiesV3Router.post("/:id/generate-summary", requireRole("admin", "editor"), async (req, res) => {
   try {
     const id = req.params.id as string;
@@ -189,8 +190,71 @@ prioritiesV3Router.post("/:id/generate-summary", requireRole("admin", "editor"),
 
     const investments = await db.select().from(roadmapRows).where(eq(roadmapRows.productPriority, priority.name));
 
-    // Stub: in production this would call OpenAI
-    const summary = `AI summary for "${priority.name}" covering ${investments.length} investment(s). This is a placeholder — connect OpenAI to generate real summaries.`;
+    let summary: string;
+
+    // Try real OpenAI call if API key is available
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+        const investmentContext = investments.map((inv) => ({
+          name: inv.investment,
+          domain: inv.domain,
+          status: inv.status,
+          description: inv.description?.slice(0, 300),
+          tactics: (inv.tactics as any[])?.map((t: any) => t.name).join(", ") || "none",
+        }));
+
+        const briefContext = [
+          priority.briefObjective && `Objective: ${priority.briefObjective}`,
+          priority.problemStatement && `Problem: ${priority.problemStatement}`,
+          priority.commercialWhy && `Commercial Why: ${priority.commercialWhy}`,
+          priority.outOfScope && `Out of Scope: ${priority.outOfScope}`,
+        ].filter(Boolean).join("\n");
+
+        const metricsContext = priority.successMetrics
+          ? (priority.successMetrics as any[]).map((m: any) => `${m.name}: target ${m.target} ${m.unit} (${m.direction})`).join("; ")
+          : "No metrics defined";
+
+        const transformContext = priority.transformations
+          ? (priority.transformations as any[]).map((t: any) => `From "${t.from}" to "${t.to}" (${t.impact})`).join("; ")
+          : "No transformations defined";
+
+        const completion = await client.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: "You are an executive product strategy analyst. Write concise, insightful priority summaries for internal stakeholders. Focus on progress, risks, and strategic alignment. Keep it to 3-5 paragraphs.",
+            },
+            {
+              role: "user",
+              content: `Summarize the product priority "${priority.name}" (Pillar: ${priority.strategicPillar || "unassigned"}).
+
+Brief:
+${briefContext || "No brief details available."}
+
+Success Metrics: ${metricsContext}
+Strategic Transformations: ${transformContext}
+
+Investments (${investments.length}):
+${JSON.stringify(investmentContext, null, 2)}
+
+Provide a clear executive summary covering: current state, progress across investments, key risks or gaps, and strategic alignment.`,
+            },
+          ],
+          max_tokens: 1000,
+          temperature: 0.7,
+        });
+
+        summary = completion.choices[0]?.message?.content ?? `Summary for "${priority.name}" could not be generated.`;
+      } catch (aiErr) {
+        console.warn("[priorities-v3] OpenAI call failed, using fallback:", aiErr);
+        summary = buildFallbackSummary(priority, investments);
+      }
+    } else {
+      summary = buildFallbackSummary(priority, investments);
+    }
 
     await db
       .update(productPriorities)
@@ -203,6 +267,32 @@ prioritiesV3Router.post("/:id/generate-summary", requireRole("admin", "editor"),
     res.status(500).json({ error: "Failed to generate summary" });
   }
 });
+
+function buildFallbackSummary(
+  priority: typeof productPriorities.$inferSelect,
+  investments: (typeof roadmapRows.$inferSelect)[],
+): string {
+  const statusCounts: Record<string, number> = {};
+  for (const inv of investments) {
+    const s = inv.status || "Not Started";
+    statusCounts[s] = (statusCounts[s] || 0) + 1;
+  }
+  const statusBreakdown = Object.entries(statusCounts)
+    .map(([s, c]) => `${c} ${s}`)
+    .join(", ");
+
+  const lines = [
+    `Priority "${priority.name}" has ${investments.length} investment(s): ${statusBreakdown || "none"}.`,
+  ];
+  if (priority.briefObjective) {
+    lines.push(`Objective: ${priority.briefObjective}`);
+  }
+  if (priority.strategicPillar) {
+    lines.push(`Aligned to pillar: ${priority.strategicPillar}.`);
+  }
+  lines.push("(AI summary unavailable -- set OPENAI_API_KEY to generate real summaries.)");
+  return lines.join("\n\n");
+}
 
 // POST /api/priorities/v3/sync — sync from taxonomy (reuse existing behavior)
 prioritiesV3Router.post("/sync", requireRole("admin", "editor"), async (req, res) => {
