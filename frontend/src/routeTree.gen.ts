@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as SettingsIndexImport } from './routes/settings/index'
 import { Route as ImportIndexImport } from './routes/import/index'
 import { Route as IntelligenceIndexImport } from './routes/intelligence/index'
@@ -24,6 +25,12 @@ import { Route as IndexImport } from './routes/index'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -72,6 +79,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/priorities/': {
@@ -123,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  LoginRoute,
   PrioritiesIndexRoute,
   PrioritiesPriorityIdRoute,
   RoadmapIndexRoute,
@@ -138,6 +153,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/login",
         "/priorities/",
         "/priorities/$priorityId",
         "/roadmap/",
@@ -147,6 +163,7 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/": { "filePath": "index.tsx" },
+    "/login": { "filePath": "login.tsx" },
     "/priorities/": { "filePath": "priorities/index.tsx" },
     "/priorities/$priorityId": { "filePath": "priorities/$priorityId.tsx" },
     "/roadmap/": { "filePath": "roadmap/index.tsx" },
