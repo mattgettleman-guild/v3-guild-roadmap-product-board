@@ -1,0 +1,39 @@
+{
+  "name": "v3-guild-roadmap",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
+    "start": "npm run start -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.19.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/nodemailer": "^7.0.10",
+    "@types/pg": "^8.16.0",
+    "cookie-parser": "^1.4.7",
+    "drizzle-kit": "^0.31.9",
+    "drizzle-orm": "^0.45.1",
+    "express-rate-limit": "^8.3.1",
+    "fuse.js": "^7.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "lucide-react": "^0.564.0",
+    "mammoth": "^1.11.0",
+    "nodemailer": "^8.0.1",
+    "openai": "^6.22.0",
+    "pdfjs-dist": "^5.4.624",
+    "pg": "^8.18.0",
+    "tailwindcss": "^4.1.18",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+.env
+*.log
+backend/data/store.json
+# routeTree.gen.ts is committed (TanStack Router regenerates it on dev)
