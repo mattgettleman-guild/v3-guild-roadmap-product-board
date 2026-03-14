@@ -181,7 +181,7 @@ export function PriorityBriefPage() {
       {/* Header */}
       <div className="flex items-center gap-3">
         <Link
-          to="/priorities/"
+          to="/priorities"
           className="flex items-center gap-1 text-sm text-[#6B7068] hover:text-[#1A1A18] transition-colors"
         >
           <ArrowLeft size={14} />

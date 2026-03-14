@@ -4118,8 +4118,17 @@ runMigrations()
     console.warn("Migration warning (non-fatal):", err.message);
   })
   .then(() => {
-    app.listen(port, "127.0.0.1", () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log(`Roadmap API listening on :${port} (${process.env.NODE_ENV || "development"})`);
+
+      // Auto-sync priorities from roadmap_rows on startup (fast no-op if already synced)
+      import("./routes/priorities.js").then(({ prioritiesRouter: _ }) => {
+        import("./lib/priorities.js").then(({ syncPriorityRecords }) => {
+          syncPriorityRecords("system")
+            .then(() => console.log("[Startup] Priority sync complete"))
+            .catch((err) => console.warn("[Startup] Priority sync skipped:", err.message));
+        });
+      }).catch(() => {});
 
       cron.schedule("0 8 * * 1", async () => {
         console.log("[CRON] Running weekly changelog digest...");

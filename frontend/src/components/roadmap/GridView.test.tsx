@@ -45,7 +45,7 @@ import { useSearch } from "@tanstack/react-router";
 
 const mockUseRows = useRows as ReturnType<typeof vi.fn>;
 const mockUseUpdateRow = useUpdateRow as ReturnType<typeof vi.fn>;
-const mockUseUIStore = useUIStore as ReturnType<typeof vi.fn>;
+const mockUseUIStore = useUIStore as unknown as ReturnType<typeof vi.fn>;
 const mockUseSearch = useSearch as ReturnType<typeof vi.fn>;
 
 function makeRow(overrides: Partial<RoadmapRow> = {}): RoadmapRow {

@@ -5,11 +5,11 @@ import { AlertsBadge } from "./AlertsBadge";
 
 const NAV_ITEMS = [
   { to: "/" as const, icon: Home, label: "Home", exact: true },
-  { to: "/priorities/" as const, icon: Flag, label: "Priorities" },
-  { to: "/roadmap/" as const, icon: LayoutGrid, label: "Roadmap" },
-  { to: "/intelligence/" as const, icon: Sparkles, label: "Intelligence" },
-  { to: "/import/" as const, icon: Upload, label: "Import" },
-  { to: "/settings/" as const, icon: Settings, label: "Settings" },
+  { to: "/priorities" as const, icon: Flag, label: "Priorities" },
+  { to: "/roadmap" as const, icon: LayoutGrid, label: "Roadmap" },
+  { to: "/intelligence" as const, icon: Sparkles, label: "Intelligence" },
+  { to: "/import" as const, icon: Upload, label: "Import" },
+  { to: "/settings" as const, icon: Settings, label: "Settings" },
 ];
 
 export function Sidebar() {

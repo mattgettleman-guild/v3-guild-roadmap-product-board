@@ -200,61 +200,100 @@ export function ImportPage() {
         </div>
 
         {/* Draft review panel */}
-        {activeJobId && draftChanges.length > 0 && (
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-[#1A1A18]">
-                Draft Changes ({draftChanges.length})
-              </h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    bulkStatusMutation.mutate({
-                      jobId: activeJobId,
-                      status: "accepted",
-                    })
-                  }
-                  className="px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md hover:bg-emerald-100"
-                >
-                  Accept All
-                </button>
-                <button
-                  onClick={() =>
-                    bulkStatusMutation.mutate({
-                      jobId: activeJobId,
-                      status: "rejected",
-                    })
-                  }
-                  className="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-700 border border-red-200 rounded-md hover:bg-red-100"
-                >
-                  Reject All
-                </button>
+        {activeJobId && draftChanges.length > 0 && (() => {
+          const activeJob = jobs.find((j) => j.id === activeJobId);
+          const isCommitted = activeJob?.status === "committed";
+          const acceptedCount = draftChanges.filter((c) => c.status === "accepted").length;
+          const pendingCount = draftChanges.filter((c) => c.status === "pending").length;
+
+          return (
+            <div className="mt-6">
+              {/* Committed banner */}
+              {isCommitted && (
+                <div className="flex items-center gap-2 mb-4 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700">
+                  <CheckCircle size={16} />
+                  <span className="font-medium">Imported successfully</span>
+                  <span className="text-emerald-600">— {acceptedCount} investments are now on the Roadmap.</span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold text-[#1A1A18]">
+                  Draft Changes ({draftChanges.length})
+                </h2>
+                <div className="flex gap-2">
+                  {!isCommitted && (
+                    <>
+                      <button
+                        onClick={() =>
+                          bulkStatusMutation.mutate({ jobId: activeJobId, status: "accepted" })
+                        }
+                        className="px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md hover:bg-emerald-100"
+                      >
+                        Accept All
+                      </button>
+                      <button
+                        onClick={() =>
+                          bulkStatusMutation.mutate({ jobId: activeJobId, status: "rejected" })
+                        }
+                        className="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-700 border border-red-200 rounded-md hover:bg-red-100"
+                      >
+                        Reject All
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
+
+              <div className="space-y-1">
+                {draftChanges.map((change) => (
+                  <DraftChangeRow
+                    key={change.id}
+                    change={change}
+                    readonly={isCommitted}
+                    onAccept={() =>
+                      updateDraftMutation.mutate({
+                        jobId: activeJobId,
+                        changeId: change.id,
+                        status: "accepted",
+                      })
+                    }
+                    onReject={() =>
+                      updateDraftMutation.mutate({
+                        jobId: activeJobId,
+                        changeId: change.id,
+                        status: "rejected",
+                      })
+                    }
+                  />
+                ))}
+              </div>
+
+              {/* Commit button — the key action */}
+              {!isCommitted && (
+                <div className="mt-4 flex items-center gap-3 pt-4 border-t border-[#E5E5E3]">
+                  <button
+                    onClick={() => commitMutation.mutate(activeJobId)}
+                    disabled={acceptedCount === 0 || commitMutation.isPending}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {commitMutation.isPending ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Send size={14} />
+                    )}
+                    {commitMutation.isPending
+                      ? "Importing…"
+                      : `Commit ${acceptedCount} investment${acceptedCount !== 1 ? "s" : ""} to Roadmap`}
+                  </button>
+                  {pendingCount > 0 && (
+                    <span className="text-xs text-[#9CA39A]">{pendingCount} still pending review</span>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="space-y-1">
-              {draftChanges.map((change) => (
-                <DraftChangeRow
-                  key={change.id}
-                  change={change}
-                  onAccept={() =>
-                    updateDraftMutation.mutate({
-                      jobId: activeJobId,
-                      changeId: change.id,
-                      status: "accepted",
-                    })
-                  }
-                  onReject={() =>
-                    updateDraftMutation.mutate({
-                      jobId: activeJobId,
-                      changeId: change.id,
-                      status: "rejected",
-                    })
-                  }
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
@@ -617,6 +656,7 @@ function DraftChangeRow({
   change,
   onAccept,
   onReject,
+  readonly = false,
 }: {
   change: {
     id: string;
@@ -626,6 +666,7 @@ function DraftChangeRow({
   };
   onAccept: () => void;
   onReject: () => void;
+  readonly?: boolean;
 }) {
   return (
     <div
@@ -654,30 +695,32 @@ function DraftChangeRow({
           <span className="text-xs text-[#9CA39A]">{change.proposed.domain}</span>
         )}
       </div>
-      <div className="flex items-center gap-1 shrink-0">
-        <button
-          onClick={onAccept}
-          className={`p-1 rounded ${
-            change.status === "accepted"
-              ? "bg-emerald-100 text-emerald-700"
-              : "hover:bg-emerald-50 text-[#9CA39A] hover:text-emerald-600"
-          }`}
-          title="Accept"
-        >
-          <CheckCircle size={14} />
-        </button>
-        <button
-          onClick={onReject}
-          className={`p-1 rounded ${
-            change.status === "rejected"
-              ? "bg-red-100 text-red-700"
-              : "hover:bg-red-50 text-[#9CA39A] hover:text-red-600"
-          }`}
-          title="Reject"
-        >
-          <XCircle size={14} />
-        </button>
-      </div>
+      {!readonly && (
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onAccept}
+            className={`p-1 rounded ${
+              change.status === "accepted"
+                ? "bg-emerald-100 text-emerald-700"
+                : "hover:bg-emerald-50 text-[#9CA39A] hover:text-emerald-600"
+            }`}
+            title="Accept"
+          >
+            <CheckCircle size={14} />
+          </button>
+          <button
+            onClick={onReject}
+            className={`p-1 rounded ${
+              change.status === "rejected"
+                ? "bg-red-100 text-red-700"
+                : "hover:bg-red-50 text-[#9CA39A] hover:text-red-600"
+            }`}
+            title="Reject"
+          >
+            <XCircle size={14} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

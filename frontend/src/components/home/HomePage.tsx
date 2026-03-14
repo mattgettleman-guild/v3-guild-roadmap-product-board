@@ -114,7 +114,7 @@ export function HomePage() {
               Recently Updated
             </h2>
             <Link
-              to="/roadmap/"
+              to="/roadmap"
               className="text-xs text-amber-600 hover:text-amber-700 font-medium"
             >
               View all
@@ -129,7 +129,7 @@ export function HomePage() {
                 return (
                   <Link
                     key={row.id}
-                    to="/roadmap/"
+                    to="/roadmap"
                     className="flex items-center gap-3 px-5 py-3 hover:bg-[#FAFAF9] transition-colors"
                   >
                     <div
@@ -175,7 +175,7 @@ export function HomePage() {
               {myInvestments.slice(0, 8).map((row) => (
                 <Link
                   key={row.id}
-                  to="/roadmap/"
+                  to="/roadmap"
                   className="flex items-center gap-3 px-5 py-3 hover:bg-[#FAFAF9] transition-colors"
                 >
                   <div
@@ -213,10 +213,10 @@ export function HomePage() {
 
       {/* Quick links */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <QuickLink to="/roadmap/" icon={<LayoutGrid size={16} />} label="Roadmap" />
-        <QuickLink to="/priorities/" icon={<Flag size={16} />} label="Priorities" />
-        <QuickLink to="/intelligence/" icon={<Sparkles size={16} />} label="Intelligence" />
-        <QuickLink to="/import/" icon={<TrendingUp size={16} />} label="Import Data" />
+        <QuickLink to="/roadmap" icon={<LayoutGrid size={16} />} label="Roadmap" />
+        <QuickLink to="/priorities" icon={<Flag size={16} />} label="Priorities" />
+        <QuickLink to="/intelligence" icon={<Sparkles size={16} />} label="Intelligence" />
+        <QuickLink to="/import" icon={<TrendingUp size={16} />} label="Import Data" />
       </div>
     </div>
   );
