@@ -4118,7 +4118,7 @@ runMigrations()
     console.warn("Migration warning (non-fatal):", err.message);
   })
   .then(() => {
-    app.listen(port, "localhost", () => {
+    app.listen(port, "127.0.0.1", () => {
       console.log(`Roadmap API listening on :${port} (${process.env.NODE_ENV || "development"})`);
 
       cron.schedule("0 8 * * 1", async () => {
