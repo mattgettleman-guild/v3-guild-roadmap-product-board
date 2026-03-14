@@ -3,9 +3,11 @@ import { AiAssistantView } from "./AiAssistantView";
 import { KnowledgeBaseView } from "./KnowledgeBaseView";
 import { ChangelogView } from "./ChangelogView";
 import { JiraPulseView } from "./JiraPulseView";
+import { SummaryPanel } from "./SummaryPanel";
 
 const TABS = [
   { key: "ai", label: "AI Chat" },
+  { key: "summary", label: "AI Summaries" },
   { key: "kb", label: "Knowledge Base" },
   { key: "changelog", label: "Changelog" },
   { key: "pulse", label: "Jira Pulse" },
@@ -47,6 +49,7 @@ export function IntelligencePage() {
       </div>
       <div className="flex-1 overflow-auto">
         {section === "ai" && <AiAssistantView />}
+        {section === "summary" && <SummaryPanel />}
         {section === "kb" && <KnowledgeBaseView />}
         {section === "changelog" && <ChangelogView />}
         {section === "pulse" && <JiraPulseView />}

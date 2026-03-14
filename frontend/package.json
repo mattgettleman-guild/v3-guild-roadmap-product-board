@@ -19,6 +19,8 @@
     "@tanstack/react-router": "^1.114.23",
     "@tanstack/react-virtual": "^3.13.4",
     "@tanstack/router-devtools": "^1.114.23",
+    "html2canvas": "^1.4.1",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.577.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -4,7 +4,7 @@ import { SettingsPage } from "../../components/settings/SettingsPage";
 
 const settingsSearchSchema = z.object({
   section: z
-    .enum(["taxonomy", "metrics", "users", "ai", "system"])
+    .enum(["taxonomy", "metrics", "users", "ai", "notifications", "system"])
     .default("taxonomy"),
 });
 

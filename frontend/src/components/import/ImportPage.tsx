@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { api } from "../../lib/api";
 import { useToastStore } from "../layout/Toast";
+import { ExportView } from "./ExportView";
 import type { SlideExtraction } from "@roadmap/shared";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -125,6 +126,22 @@ export function ImportPage() {
       qc.invalidateQueries({ queryKey: ["import-jobs"] });
     },
   });
+
+  const pageSection = (search as { section?: string }).section ?? "import";
+
+  if (pageSection === "export") {
+    return (
+      <div className="h-full flex flex-col">
+        <div className="px-6 pt-6 pb-4 border-b border-[#E5E5E3]">
+          <h1 className="text-2xl font-bold text-[#1A1A18] tracking-tight">Export</h1>
+          <p className="text-sm text-[#6B7068] mt-1">Download your roadmap data</p>
+        </div>
+        <div className="flex-1 overflow-auto p-6">
+          <ExportView />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col">

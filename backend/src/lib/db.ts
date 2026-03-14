@@ -59,6 +59,18 @@ export async function runMigrations(): Promise<void> {
       WHERE slug IS NULL OR slug = '';
     `);
 
+    // External roadmap share tokens
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS external_shares (
+        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        token uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(),
+        audience text NOT NULL DEFAULT 'all',
+        created_by text NOT NULL DEFAULT 'unknown',
+        expires_at timestamptz,
+        created_at timestamptz NOT NULL DEFAULT now()
+      );
+    `);
+
     console.log("Database columns ensured");
   } finally {
     client.release();

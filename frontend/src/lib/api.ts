@@ -943,4 +943,32 @@ export const api = {
     request<{ summary: string }>(`/api/priorities/v3/${id}/generate-summary`, {
       method: "POST",
     }),
+
+  // Export
+  exportCsv: async () => {
+    const res = await fetch(`${API_BASE}/api/data/export/csv`, { credentials: "include" });
+    if (!res.ok) throw new Error("CSV export failed");
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `roadmap-export-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  // Taxonomy sync
+  syncTaxonomy: () =>
+    request<{ ok: boolean; synced: number }>("/api/taxonomy/sync", { method: "POST" }),
+
+  // External share tokens
+  createShareToken: (audience: string) =>
+    request<{ token: string; url: string }>("/api/external-roadmap/share", {
+      method: "POST",
+      body: JSON.stringify({ audience }),
+    }),
+  getPublicRoadmapByToken: (token: string) =>
+    request<{ audience: string; rows: Array<{ id: string; investment: string; domain: string; status: string; productPriority: string; strategicPillar: string; timeline?: { start: string; end: string }; themes: string[]; tags: string[] }> }>(
+      `/api/external-roadmap/public/${token}`
+    ),
 };

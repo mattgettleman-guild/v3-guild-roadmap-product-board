@@ -210,6 +210,38 @@ app.post("/api/auth/logout", async (req, res) => {
   }
 });
 
+// Public: external roadmap share token endpoint (no auth required)
+app.get("/api/external-roadmap/public/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const result = await pool.query(
+      "SELECT * FROM external_shares WHERE token = $1 AND (expires_at IS NULL OR expires_at > now())",
+      [token]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Share link not found or expired" });
+    }
+    const store = await readStore();
+    const rows = store.rows
+      .filter((r) => r.visibility === "external_approved")
+      .map((r) => ({
+        id: r.id,
+        investment: r.investment,
+        domain: r.domain,
+        status: r.status,
+        productPriority: r.productPriority,
+        strategicPillar: r.strategicPillar,
+        timeline: r.timeline,
+        themes: r.themes ?? [],
+        tags: r.tags ?? [],
+      }));
+    res.json({ audience: result.rows[0].audience, rows });
+  } catch (err) {
+    console.error("GET /api/external-roadmap/public/:token error:", err);
+    res.status(500).json({ error: "Failed to fetch shared roadmap" });
+  }
+});
+
 app.use(requireAuth);
 
 app.get("/api/data/export/xlsx", requireRole("admin"), async (_req, res) => {
@@ -251,6 +283,44 @@ app.get("/api/data/export", requireRole("admin"), async (_req, res) => {
   } catch (err) {
     console.error("GET /api/data/export error:", err);
     res.status(500).json({ error: "Failed to export data" });
+  }
+});
+
+app.get("/api/data/export/csv", requireRole("admin", "editor"), async (_req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM roadmap_rows ORDER BY strategic_pillar, product_priority, investment"
+    );
+    const headers = ["investment", "strategicPillar", "productPriority", "domain", "subDomain", "owners", "status", "visibility", "timelineStart", "timelineEnd", "themes", "tags"];
+    const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const lines = [
+      headers.join(","),
+      ...result.rows.map((r) => {
+        const timeline = r.timeline as { start?: string; end?: string } | null;
+        const themes = Array.isArray(r.themes) ? r.themes.join(";") : "";
+        const tags = Array.isArray(r.tags) ? r.tags.join(";") : "";
+        return [
+          escape(r.investment),
+          escape(r.strategic_pillar),
+          escape(r.product_priority),
+          escape(r.domain),
+          escape(r.sub_domain),
+          escape(r.owners),
+          escape(r.status),
+          escape(r.visibility),
+          escape(timeline?.start ?? ""),
+          escape(timeline?.end ?? ""),
+          escape(themes),
+          escape(tags),
+        ].join(",");
+      }),
+    ];
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename="roadmap-export-${new Date().toISOString().split("T")[0]}.csv"`);
+    res.send(lines.join("\n"));
+  } catch (err) {
+    console.error("GET /api/data/export/csv error:", err);
+    res.status(500).json({ error: "Failed to export CSV" });
   }
 });
 
@@ -601,6 +671,62 @@ app.patch("/api/taxonomy", requireRole("admin", "editor"), async (req, res) => {
   } catch (err) {
     console.error("PATCH /api/taxonomy error:", err);
     res.status(500).json({ error: "Failed to update taxonomy" });
+  }
+});
+
+// Taxonomy sync — scan roadmap_rows for distinct values and merge into taxonomy
+app.post("/api/taxonomy/sync", requireRole("admin", "editor"), async (req, res) => {
+  try {
+    const store = await readStore();
+    const existing = store.taxonomy;
+    const domains = new Set(existing.domains ?? []);
+    const owners = new Set(existing.owners ?? []);
+    const themes = new Set(existing.themes ?? []);
+    const tags = new Set(existing.tags ?? []);
+    const subDomains = new Set(existing.subDomains ?? []);
+    let added = 0;
+    for (const row of store.rows) {
+      if (row.domain && !domains.has(row.domain)) { domains.add(row.domain); added++; }
+      if (row.subDomain && !subDomains.has(row.subDomain)) { subDomains.add(row.subDomain); added++; }
+      if (row.owners && !owners.has(row.owners)) { owners.add(row.owners); added++; }
+      for (const t of row.themes ?? []) if (!themes.has(t)) { themes.add(t); added++; }
+      for (const t of row.tags ?? []) if (!tags.has(t)) { tags.add(t); added++; }
+    }
+    const merged = {
+      ...existing,
+      domains: [...domains],
+      owners: [...owners],
+      themes: [...themes],
+      tags: [...tags],
+      subDomains: [...subDomains],
+    };
+    await pool.query(
+      "UPDATE taxonomy SET domains=$1, owners=$2, themes=$3, tags=$4, sub_domains=$5",
+      [JSON.stringify(merged.domains), JSON.stringify(merged.owners), JSON.stringify(merged.themes), JSON.stringify(merged.tags), JSON.stringify(merged.subDomains)]
+    );
+    res.json({ ok: true, synced: added });
+  } catch (err) {
+    console.error("POST /api/taxonomy/sync error:", err);
+    res.status(500).json({ error: "Failed to sync taxonomy" });
+  }
+});
+
+// External share token — create a shareable link
+app.post("/api/external-roadmap/share", requireRole("admin", "editor"), async (req, res) => {
+  try {
+    const audience = req.body.audience ?? "all";
+    const expiresAt = req.body.expiresAt ?? null;
+    const actor = (req as { user?: { email?: string } }).user?.email ?? "unknown";
+    const result = await pool.query(
+      "INSERT INTO external_shares (audience, created_by, expires_at) VALUES ($1, $2, $3) RETURNING token",
+      [audience, actor, expiresAt]
+    );
+    const token = result.rows[0].token;
+    const baseUrl = process.env.APP_BASE_URL || "";
+    res.json({ token, url: `${baseUrl}?shareToken=${token}` });
+  } catch (err) {
+    console.error("POST /api/external-roadmap/share error:", err);
+    res.status(500).json({ error: "Failed to create share link" });
   }
 });
 

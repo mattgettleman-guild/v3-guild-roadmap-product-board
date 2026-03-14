@@ -12,6 +12,8 @@ import {
   BarChart3,
   Loader2,
   AlertTriangle,
+  Bell,
+  RefreshCw,
 } from "lucide-react";
 import { api } from "../../lib/api";
 import { useTaxonomy } from "../../hooks/useTaxonomy";
@@ -21,6 +23,7 @@ const TABS = [
   { key: "metrics", label: "Metrics", icon: BarChart3 },
   { key: "users", label: "Users", icon: Users },
   { key: "ai", label: "AI Config", icon: Sparkles },
+  { key: "notifications", label: "Notifications", icon: Bell },
   { key: "system", label: "System", icon: Database },
 ] as const;
 
@@ -152,6 +155,94 @@ function TaxonomySection() {
           )}
         </div>
       ))}
+
+      {/* Sync from roadmap data */}
+      <TaxonomySyncButton />
+    </div>
+  );
+}
+
+function TaxonomySyncButton() {
+  const qc = useQueryClient();
+  const [syncing, setSyncing] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const handleSync = async () => {
+    setSyncing(true);
+    setMessage(null);
+    try {
+      const result = await api.syncTaxonomy();
+      setMessage(result.synced > 0 ? `Synced ${result.synced} new values` : "Already up to date");
+      setTimeout(() => setMessage(null), 3000);
+      qc.invalidateQueries({ queryKey: ["taxonomy"] });
+    } catch {
+      setMessage("Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-white border border-[#E5E5E3] rounded-xl">
+      <div>
+        <p className="text-sm font-medium text-[#1A1A18]">Sync from roadmap data</p>
+        <p className="text-xs text-[#9CA39A] mt-0.5">Auto-populate taxonomy from existing investment field values</p>
+      </div>
+      <div className="flex items-center gap-3">
+        {message && <span className="text-xs text-green-600">{message}</span>}
+        <button
+          onClick={handleSync}
+          disabled={syncing}
+          className="flex items-center gap-1.5 text-sm px-3 py-1.5 border border-[#E5E5E3] rounded-lg hover:bg-[#FAFAF9] disabled:opacity-50 transition-colors"
+        >
+          {syncing ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />}
+          Sync
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function NotificationsSection() {
+  const { data: prefs, isLoading } = useQuery({
+    queryKey: ["digest-preferences"],
+    queryFn: () => fetch("/api/digest/preferences", { credentials: "include" }).then((r) => r.json()),
+  });
+  const qc = useQueryClient();
+  const updateMutation = useMutation({
+    mutationFn: (subscribed: boolean) =>
+      fetch("/api/digest/preferences", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subscribed }),
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["digest-preferences"] }),
+  });
+
+  if (isLoading) return <p className="text-sm text-[#9CA39A]">Loading…</p>;
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white border border-[#E5E5E3] rounded-xl p-5">
+        <h3 className="text-sm font-semibold text-[#1A1A18] mb-1">Weekly Changelog Digest</h3>
+        <p className="text-xs text-[#6B7068] mb-4">
+          Receive a weekly summary of roadmap changes every Monday at 8:00 AM.
+        </p>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <div
+            onClick={() => updateMutation.mutate(!prefs?.subscribed)}
+            className={`relative w-10 h-5 rounded-full transition-colors ${prefs?.subscribed ? "bg-amber-500" : "bg-[#D1D5DB]"}`}
+          >
+            <div
+              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${prefs?.subscribed ? "translate-x-5" : "translate-x-0.5"}`}
+            />
+          </div>
+          <span className="text-sm text-[#1A1A18]">
+            {prefs?.subscribed ? "Subscribed" : "Not subscribed"}
+          </span>
+        </label>
+      </div>
     </div>
   );
 }
@@ -476,6 +567,7 @@ export function SettingsPage() {
         {section === "metrics" && <MetricsSection />}
         {section === "users" && <UsersSection />}
         {section === "ai" && <AiConfigSection />}
+        {section === "notifications" && <NotificationsSection />}
         {section === "system" && <SystemSection />}
       </div>
     </div>
