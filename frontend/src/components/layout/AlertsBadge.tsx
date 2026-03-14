@@ -39,7 +39,7 @@ const SEVERITY_CONFIG: Record<
     text: "text-amber-700",
     border: "border-amber-200",
   },
-  info: { icon: Clock, bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
+  info: { icon: Clock, bg: "bg-[#FAFAF9]", text: "text-[#6B7068]", border: "border-[#E5E5E3]" },
 };
 
 export function AlertsBadge() {
@@ -86,7 +86,7 @@ export function AlertsBadge() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative p-2 rounded-lg text-slate-400 hover:text-amber-500 hover:bg-[#2A2A28] transition-colors"
+        className="relative p-2 rounded-lg text-[#9CA39A] hover:text-amber-500 hover:bg-[#2A2A28] transition-colors"
         aria-label={`${alerts.length} alert${alerts.length !== 1 ? "s" : ""}`}
       >
         <Bell size={16} />
@@ -113,7 +113,7 @@ export function AlertsBadge() {
               {alerts.length > 0 && (
                 <button
                   onClick={() => dismissMutation.mutate(alerts.map((a) => a.key))}
-                  className="p-1.5 rounded hover:bg-slate-100 text-[#9CA39A] hover:text-emerald-600"
+                  className="p-1.5 rounded hover:bg-[#FAFAF9] text-[#9CA39A] hover:text-emerald-600 transition-colors"
                   title="Mark all as read"
                 >
                   <CheckCheck size={14} />
@@ -122,7 +122,7 @@ export function AlertsBadge() {
               {readAlerts.length > 0 && (
                 <button
                   onClick={() => setShowRead((v) => !v)}
-                  className={`p-1.5 rounded hover:bg-slate-100 ${
+                  className={`p-1.5 rounded hover:bg-[#FAFAF9] transition-colors ${
                     showRead ? "text-amber-600" : "text-[#9CA39A] hover:text-[#6B7068]"
                   }`}
                   title={showRead ? "Hide read alerts" : `Show ${readAlerts.length} read`}
@@ -132,7 +132,7 @@ export function AlertsBadge() {
               )}
               <button
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded hover:bg-slate-100 text-[#9CA39A]"
+                className="p-1.5 rounded hover:bg-[#FAFAF9] text-[#9CA39A] transition-colors"
               >
                 <X size={14} />
               </button>
@@ -150,7 +150,7 @@ export function AlertsBadge() {
               return (
                 <div
                   key={alert.key}
-                  className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-start gap-3 group"
+                  className="w-full text-left px-4 py-3 hover:bg-[#FAFAF9] transition-colors flex items-start gap-3 group"
                 >
                   <button
                     onClick={() => {
@@ -188,7 +188,7 @@ export function AlertsBadge() {
                 return (
                   <div
                     key={alert.key}
-                    className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-start gap-3 opacity-50 group"
+                    className="w-full text-left px-4 py-3 hover:bg-[#FAFAF9] transition-colors flex items-start gap-3 opacity-50 group"
                   >
                     <button
                       onClick={() => {

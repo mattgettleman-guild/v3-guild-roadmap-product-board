@@ -64,11 +64,27 @@ export function PrioritiesPage() {
 
   if (isLoading) {
     return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold text-[#1A1A18] mb-4 tracking-tight">
+      <div className="p-5 space-y-5">
+        <h1 className="text-2xl font-bold text-[#1A1A18] tracking-tight">
           Product Priorities
         </h1>
-        <p className="text-[#9CA39A] text-sm">Loading priorities...</p>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="border border-[#E5E5E3] rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-3 bg-[#FAFAF9] border-b border-[#E5E5E3] flex items-center gap-2">
+                <div className="h-3 w-32 rounded bg-[#E5E5E3] animate-pulse" />
+              </div>
+              <div className="divide-y divide-[#E5E5E3]">
+                {Array.from({ length: 3 }).map((_, j) => (
+                  <div key={j} className="px-4 py-3 flex items-center gap-3">
+                    <div className="h-3 flex-1 rounded bg-[#E5E5E3] animate-pulse" />
+                    <div className="h-5 w-16 rounded-full bg-[#E5E5E3] animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

@@ -66,7 +66,7 @@ function InlineTextField({
       ) : (
         <p
           onClick={() => setEditing(true)}
-          className={`mt-1 cursor-text rounded px-1 -mx-1 hover:bg-slate-50 text-[#1A1A18] min-h-[1.5rem] ${className}`}
+          className={`mt-1 cursor-text rounded px-1 -mx-1 hover:bg-[#FAFAF9] transition-colors text-[#1A1A18] min-h-[1.5rem] ${className}`}
         >
           {value || (
             <span className="text-[#9CA39A]">Click to edit...</span>
@@ -121,7 +121,7 @@ function InlineTextArea({
       ) : (
         <p
           onClick={() => setEditing(true)}
-          className="mt-1 cursor-text text-sm text-[#1A1A18] whitespace-pre-wrap hover:bg-slate-50 rounded px-1 -mx-1 min-h-[2rem]"
+          className="mt-1 cursor-text text-sm text-[#1A1A18] whitespace-pre-wrap hover:bg-[#FAFAF9] transition-colors rounded px-1 -mx-1 min-h-[2rem]"
         >
           {value || <span className="text-[#9CA39A]">{placeholder}</span>}
         </p>

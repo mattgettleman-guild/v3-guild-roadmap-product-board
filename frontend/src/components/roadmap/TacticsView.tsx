@@ -48,7 +48,7 @@ function TacticCard({ tactic }: { tactic: Tactic }) {
       {/* Header */}
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[#FAFAF9] transition-colors"
       >
         {expanded ? (
           <ChevronDown size={12} className="text-[#9CA39A] shrink-0" />
@@ -125,7 +125,7 @@ function TacticCard({ tactic }: { tactic: Tactic }) {
               {tactic.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-[#6B7068] rounded"
+                  className="text-[10px] px-1.5 py-0.5 bg-[#FAFAF9] border border-[#E5E5E3] text-[#6B7068] rounded"
                 >
                   {tag}
                 </span>

@@ -22,10 +22,10 @@ const DOC_TYPE_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  ready: "bg-emerald-100 text-emerald-700",
-  processing: "bg-amber-100 text-amber-700",
-  uploading: "bg-blue-100 text-blue-700",
-  error: "bg-red-100 text-red-700",
+  ready: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  processing: "bg-amber-100 text-amber-700 border-amber-200",
+  uploading: "bg-[#fef9c3] text-[#d97706] border-[#fde68a]",
+  error: "bg-red-100 text-red-700 border-red-200",
 };
 
 export function KnowledgeBaseView() {
@@ -216,7 +216,7 @@ export function KnowledgeBaseView() {
                     {doc.filename}
                   </span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${STATUS_COLORS[doc.status] || "bg-[#FAFAF9] text-[#9CA39A]"}`}
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium border ${STATUS_COLORS[doc.status] || "bg-[#FAFAF9] text-[#9CA39A] border-[#E5E5E3]"}`}
                   >
                     {doc.status}
                   </span>

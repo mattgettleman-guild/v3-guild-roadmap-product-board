@@ -139,7 +139,7 @@ function TaxonomySection() {
                   if (e.key === "Enter") addItem(field.key);
                 }}
                 placeholder={`Add ${field.label.toLowerCase()}...`}
-                className="flex-1 px-3 py-1.5 text-sm border border-[#E5E5E3] rounded-lg bg-white text-[#1A1A18]"
+                className="flex-1 px-3 py-1.5 text-sm border border-[#E5E5E3] rounded-lg bg-white text-[#1A1A18] focus:outline-none focus:border-amber-400 transition-colors"
                 autoFocus
               />
               <button
@@ -187,7 +187,7 @@ function MetricsSection() {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="New metric name..."
-          className="flex-1 px-3 py-2 text-sm border border-[#E5E5E3] rounded-lg bg-white text-[#1A1A18]"
+          className="flex-1 px-3 py-2 text-sm border border-[#E5E5E3] rounded-lg bg-white text-[#1A1A18] focus:outline-none focus:border-amber-400 transition-colors"
         />
         <button
           onClick={() => {
@@ -320,7 +320,7 @@ function AiConfigSection() {
           onChange={(e) => setInstructions(e.target.value)}
           rows={8}
           placeholder="Add custom instructions for the AI assistant..."
-          className="w-full border border-[#E5E5E3] rounded-lg p-3 text-sm text-[#1A1A18] resize-none"
+          className="w-full border border-[#E5E5E3] rounded-lg p-3 text-sm text-[#1A1A18] resize-none focus:outline-none focus:border-amber-400 transition-colors"
         />
         <button
           onClick={() => saveMutation.mutate()}

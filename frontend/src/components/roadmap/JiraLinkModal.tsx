@@ -55,7 +55,7 @@ export function JiraLinkModal({ rowId, investmentName, existingLinks, onClose }:
             <h3 className="text-sm font-semibold text-[#1A1A18]">Link Jira Issues</h3>
             <p className="text-xs text-[#9CA39A] mt-0.5">{investmentName}</p>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-slate-100 text-[#9CA39A]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-[#FAFAF9] text-[#9CA39A] transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -136,7 +136,7 @@ export function JiraLinkModal({ rowId, investmentName, existingLinks, onClose }:
                   {searchResults.map((issue) => (
                     <div
                       key={issue.key}
-                      className="flex items-center justify-between p-2 rounded-md hover:bg-slate-50"
+                      className="flex items-center justify-between p-2 rounded-md hover:bg-[#FAFAF9] transition-colors"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ function SuggestionRow({
         : "text-red-600 bg-red-50";
 
   return (
-    <div className="flex items-center justify-between p-2 rounded-md hover:bg-slate-50">
+    <div className="flex items-center justify-between p-2 rounded-md hover:bg-[#FAFAF9] transition-colors">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono text-amber-600">{jiraKey}</span>

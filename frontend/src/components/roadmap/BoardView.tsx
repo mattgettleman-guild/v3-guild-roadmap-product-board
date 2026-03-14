@@ -202,8 +202,26 @@ export function BoardView() {
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-[#9CA39A] text-sm">
-        Loading investments...
+      <div className="flex gap-4 p-5 pt-2 overflow-x-auto h-full">
+        {BOARD_COLUMNS.map((col) => (
+          <div
+            key={col.key}
+            className="flex flex-col min-w-[260px] w-[260px] rounded-xl border border-[#E5E5E3] bg-[#FAFAF9]"
+          >
+            <div className="px-3 py-2.5 flex items-center gap-2 border-b border-[#E5E5E3]">
+              <div className="w-2 h-2 rounded-full bg-[#E5E5E3] animate-pulse" />
+              <div className="h-3 w-24 rounded bg-[#E5E5E3] animate-pulse" />
+            </div>
+            <div className="flex-1 p-2 space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-lg border border-[#E5E5E3] p-3 space-y-2">
+                  <div className="h-3 w-full rounded bg-[#E5E5E3] animate-pulse" />
+                  <div className="h-3 w-3/4 rounded bg-[#E5E5E3] animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     );
   }

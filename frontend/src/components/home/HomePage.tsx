@@ -86,10 +86,10 @@ export function HomePage() {
           bg="bg-amber-50"
         />
         <StatCard
-          icon={<TrendingUp size={18} className="text-blue-600" />}
+          icon={<TrendingUp size={18} className="text-amber-600" />}
           label="In Progress"
           value={inProgress}
-          bg="bg-blue-50"
+          bg="bg-amber-50"
         />
         <StatCard
           icon={<CheckCircle size={18} className="text-emerald-600" />}
@@ -98,10 +98,10 @@ export function HomePage() {
           bg="bg-emerald-50"
         />
         <StatCard
-          icon={<Flag size={18} className="text-purple-600" />}
+          icon={<Flag size={18} className="text-amber-600" />}
           label="Active Priorities"
           value={activePriorities}
-          bg="bg-purple-50"
+          bg="bg-amber-50"
         />
       </div>
 
@@ -130,7 +130,7 @@ export function HomePage() {
                   <Link
                     key={row.id}
                     to="/roadmap/"
-                    className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-[#FAFAF9] transition-colors"
                   >
                     <div
                       className="w-1 h-8 rounded-full shrink-0"
@@ -176,7 +176,7 @@ export function HomePage() {
                 <Link
                   key={row.id}
                   to="/roadmap/"
-                  className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-3 px-5 py-3 hover:bg-[#FAFAF9] transition-colors"
                 >
                   <div
                     className="w-1 h-8 rounded-full shrink-0"
@@ -254,7 +254,7 @@ function QuickLink({
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 px-4 py-3 border border-[#E5E5E3] rounded-lg bg-white hover:bg-slate-50 transition-colors"
+      className="flex items-center gap-3 px-4 py-3 border border-[#E5E5E3] rounded-lg bg-white hover:bg-[#FAFAF9] transition-colors"
     >
       <span className="text-[#9CA39A]">{icon}</span>
       <span className="text-sm font-medium text-[#1A1A18]">{label}</span>

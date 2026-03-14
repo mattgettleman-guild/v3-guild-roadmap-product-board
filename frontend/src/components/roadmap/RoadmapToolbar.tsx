@@ -17,7 +17,7 @@ export function RoadmapToolbar() {
   return (
     <div className="h-12 flex items-center gap-3 px-5 border-b border-[#E5E5E3] bg-white">
       {/* View switcher */}
-      <div className="flex items-center bg-slate-100 rounded-md p-0.5">
+      <div className="flex items-center bg-[#FAFAF9] border border-[#E5E5E3] rounded-md p-0.5">
         {views.map(({ key, label }) => (
           <button
             key={key}

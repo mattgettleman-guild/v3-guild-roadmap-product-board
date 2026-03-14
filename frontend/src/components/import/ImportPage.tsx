@@ -130,7 +130,7 @@ export function ImportPage() {
     <div className="h-full flex flex-col">
       {/* Page header */}
       <div className="px-6 pt-6 pb-4 border-b border-[#E5E5E3]">
-        <h1 className="text-xl font-semibold text-[#1A1A18]">Import</h1>
+        <h1 className="text-2xl font-bold text-[#1A1A18] tracking-tight">Import</h1>
         <p className="text-sm text-[#6B7068] mt-1">
           Import investments from spreadsheets, slide decks, or paste raw data
         </p>
@@ -145,7 +145,7 @@ export function ImportPage() {
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-md border-b-2 transition-colors ${
               activeTab === key
                 ? "border-amber-600 text-amber-700 bg-amber-50/50"
-                : "border-transparent text-[#6B7068] hover:text-[#1A1A18] hover:bg-slate-50"
+                : "border-transparent text-[#6B7068] hover:text-[#1A1A18] hover:bg-[#FAFAF9]"
             }`}
           >
             <Icon size={14} />
@@ -559,7 +559,7 @@ function ImportJobCard({
       className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
         isActive
           ? "border-amber-300 bg-amber-50/50"
-          : "border-[#E5E5E3] hover:bg-slate-50"
+          : "border-[#E5E5E3] hover:bg-[#FAFAF9]"
       }`}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -642,7 +642,7 @@ function DraftChangeRow({
           className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${
             change.action === "create"
               ? "bg-emerald-100 text-emerald-700"
-              : "bg-blue-100 text-blue-700"
+              : "bg-amber-100 text-amber-700"
           }`}
         >
           {change.action}

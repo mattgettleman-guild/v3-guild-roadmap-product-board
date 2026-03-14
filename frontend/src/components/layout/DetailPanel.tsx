@@ -34,7 +34,7 @@ export function DetailPanel() {
           </span>
           <button
             onClick={() => selectRow(null)}
-            className="p-1 rounded hover:bg-slate-100 text-[#9CA39A]"
+            className="p-1 rounded hover:bg-[#FAFAF9] text-[#9CA39A] transition-colors"
           >
             <X size={16} />
           </button>
@@ -130,7 +130,7 @@ export function DetailPanel() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 p-2 rounded-md border border-[#E5E5E3] hover:bg-slate-50 text-sm"
+                    className="flex items-center gap-2 p-2 rounded-md border border-[#E5E5E3] hover:bg-[#FAFAF9] transition-colors text-sm"
                   >
                     <span className="text-xs font-mono text-amber-600">{link.key}</span>
                     <span className="text-[#1A1A18] truncate flex-1">{link.title}</span>
@@ -172,7 +172,7 @@ export function DetailPanel() {
                 {row.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs px-2 py-0.5 bg-slate-100 text-[#6B7068] rounded-full"
+                    className="text-xs px-2 py-0.5 bg-[#FAFAF9] border border-[#E5E5E3] text-[#6B7068] rounded-full"
                   >
                     {tag}
                   </span>
@@ -243,7 +243,7 @@ function InlineTextField({
       ) : (
         <p
           onClick={() => setEditing(true)}
-          className={`mt-1 cursor-text rounded px-1 -mx-1 hover:bg-slate-50 ${className} text-sm text-[#1A1A18] min-h-[1.5rem]`}
+          className={`mt-1 cursor-text rounded px-1 -mx-1 hover:bg-[#FAFAF9] transition-colors ${className} text-sm text-[#1A1A18] min-h-[1.5rem]`}
         >
           {value || (
             <span className="text-[#9CA39A]">Click to edit...</span>
@@ -296,7 +296,7 @@ function InlineTextArea({
       ) : (
         <p
           onClick={() => setEditing(true)}
-          className="mt-1 cursor-text text-sm text-[#1A1A18] whitespace-pre-wrap hover:bg-slate-50 rounded px-1 -mx-1 min-h-[2rem]"
+          className="mt-1 cursor-text text-sm text-[#1A1A18] whitespace-pre-wrap hover:bg-[#FAFAF9] transition-colors rounded px-1 -mx-1 min-h-[2rem]"
         >
           {value || (
             <span className="text-[#9CA39A]">Click to add description...</span>

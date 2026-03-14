@@ -27,13 +27,13 @@ const CHANGE_TYPE_LABELS: Record<string, string> = {
 };
 
 const CHANGE_TYPE_COLORS: Record<string, string> = {
-  status_change: "bg-amber-100 text-amber-700",
-  date_shift: "bg-blue-100 text-blue-700",
-  scope_change: "bg-purple-100 text-purple-700",
-  priority_change: "bg-emerald-100 text-emerald-700",
-  new_item: "bg-green-100 text-green-700",
-  removed_item: "bg-red-100 text-red-700",
-  assignment_change: "bg-orange-100 text-orange-700",
+  status_change: "bg-amber-100 text-amber-700 border-amber-200",
+  date_shift: "bg-[#fef9c3] text-[#b45309] border-[#fcd34d]",
+  scope_change: "bg-[#f1f5f9] text-[#64748b] border-[#cbd5e1]",
+  priority_change: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  new_item: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  removed_item: "bg-red-100 text-red-700 border-red-200",
+  assignment_change: "bg-amber-50 text-amber-700 border-amber-200",
 };
 
 export function ChangelogView() {
@@ -127,10 +127,10 @@ export function ChangelogView() {
                 onClick={() =>
                   setChangeType(changeType === type ? "" : type)
                 }
-                className={`px-2 py-1 text-[10px] rounded-full font-medium cursor-pointer border-none transition-colors ${
+                className={`px-2 py-1 text-[10px] rounded-full font-medium cursor-pointer border transition-colors ${
                   changeType === type
-                    ? "bg-amber-600 text-white"
-                    : CHANGE_TYPE_COLORS[type] || "bg-[#FAFAF9] text-[#6B7068]"
+                    ? "bg-amber-600 text-white border-amber-700"
+                    : CHANGE_TYPE_COLORS[type] || "bg-[#FAFAF9] text-[#6B7068] border-[#E5E5E3]"
                 }`}
               >
                 {CHANGE_TYPE_LABELS[type] || type} ({count})
@@ -258,7 +258,7 @@ export function ChangelogView() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${CHANGE_TYPE_COLORS[event.changeType] || "bg-[#FAFAF9] text-[#6B7068]"}`}
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium border ${CHANGE_TYPE_COLORS[event.changeType] || "bg-[#FAFAF9] text-[#6B7068] border-[#E5E5E3]"}`}
                     >
                       {CHANGE_TYPE_LABELS[event.changeType] ||
                         event.changeType}

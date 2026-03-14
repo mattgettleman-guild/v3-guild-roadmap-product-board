@@ -48,8 +48,36 @@ export function GridView() {
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-[#9CA39A] text-sm">
-        Loading investments...
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="h-9 bg-[#FAFAF9] border-b border-[#E5E5E3]">
+              {COLUMNS.map((col) => (
+                <th
+                  key={col.key}
+                  style={{ width: col.width, minWidth: col.width }}
+                  className="text-left px-3 text-xs font-medium text-[#9CA39A] uppercase tracking-wide"
+                >
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <tr key={i} className="h-10 border-b border-[#E5E5E3]">
+                {COLUMNS.map((col) => (
+                  <td key={col.key} className="px-3" style={{ width: col.width, minWidth: col.width }}>
+                    <div
+                      className="h-3 rounded bg-[#E5E5E3] animate-pulse"
+                      style={{ width: col.key === "investment" ? "75%" : "60%" }}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
@@ -87,7 +115,10 @@ export function GridView() {
           }}
         >
           {filtered.length === 0 ? (
-            <div className="p-8 text-center text-[#9CA39A]">No investments found</div>
+            <div className="py-16 text-center">
+              <p className="text-sm font-medium text-[#6B7068]">No investments match the active filters</p>
+              <p className="text-xs text-[#9CA39A] mt-1">Try clearing a filter from the toolbar above</p>
+            </div>
           ) : (
             virtualizer.getVirtualItems().map((virtualRow) => {
               const row = filtered[virtualRow.index];
@@ -154,7 +185,7 @@ function GridRow({
     <table className="w-full border-collapse text-sm">
       <tbody>
         <tr
-          className="h-10 border-b border-[#E5E5E3] hover:bg-slate-50 cursor-pointer group"
+          className="h-10 border-b border-[#E5E5E3] hover:bg-[#FAFAF9] cursor-pointer group transition-colors"
           onClick={onSelect}
         >
           {/* Investment name with domain border */}

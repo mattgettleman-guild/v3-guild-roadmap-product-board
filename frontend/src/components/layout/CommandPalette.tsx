@@ -239,9 +239,9 @@ export function CommandPalette() {
       case "investment":
         return <Briefcase size={14} className="text-amber-600 shrink-0" />;
       case "tactic":
-        return <Target size={14} className="text-emerald-600 shrink-0" />;
+        return <Target size={14} className="text-[#6B7068] shrink-0" />;
       case "jira":
-        return <LinkIcon size={14} className="text-blue-600 shrink-0" />;
+        return <LinkIcon size={14} className="text-[#9CA39A] shrink-0" />;
       case "action":
         return <ArrowRight size={14} className="text-amber-600 shrink-0" />;
     }
