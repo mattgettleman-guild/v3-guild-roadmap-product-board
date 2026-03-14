@@ -8,62 +8,118 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as RoadmapIndexRouteImport } from './routes/roadmap/index'
+import { Route as PrioritiesIndexRouteImport } from './routes/priorities/index'
+import { Route as IntelligenceIndexRouteImport } from './routes/intelligence/index'
+import { Route as ImportIndexRouteImport } from './routes/import/index'
+import { Route as PrioritiesPriorityIdRouteImport } from './routes/priorities/$priorityId'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SettingsIndexImport } from './routes/settings/index'
-import { Route as ImportIndexImport } from './routes/import/index'
-import { Route as IntelligenceIndexImport } from './routes/intelligence/index'
-import { Route as RoadmapIndexImport } from './routes/roadmap/index'
-import { Route as PrioritiesPriorityIdImport } from './routes/priorities/$priorityId'
-import { Route as PrioritiesIndexImport } from './routes/priorities/index'
-import { Route as IndexImport } from './routes/index'
-
-// Create/Update Routes
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PrioritiesIndexRoute = PrioritiesIndexImport.update({
-  id: '/priorities/',
-  path: '/priorities/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PrioritiesPriorityIdRoute = PrioritiesPriorityIdImport.update({
-  id: '/priorities/$priorityId',
-  path: '/priorities/$priorityId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const RoadmapIndexRoute = RoadmapIndexImport.update({
-  id: '/roadmap/',
-  path: '/roadmap/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IntelligenceIndexRoute = IntelligenceIndexImport.update({
-  id: '/intelligence/',
-  path: '/intelligence/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ImportIndexRoute = ImportIndexImport.update({
-  id: '/import/',
-  path: '/import/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SettingsIndexRoute = SettingsIndexImport.update({
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoadmapIndexRoute = RoadmapIndexRouteImport.update({
+  id: '/roadmap/',
+  path: '/roadmap/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrioritiesIndexRoute = PrioritiesIndexRouteImport.update({
+  id: '/priorities/',
+  path: '/priorities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelligenceIndexRoute = IntelligenceIndexRouteImport.update({
+  id: '/intelligence/',
+  path: '/intelligence/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportIndexRoute = ImportIndexRouteImport.update({
+  id: '/import/',
+  path: '/import/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrioritiesPriorityIdRoute = PrioritiesPriorityIdRouteImport.update({
+  id: '/priorities/$priorityId',
+  path: '/priorities/$priorityId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
+  '/import/': typeof ImportIndexRoute
+  '/intelligence/': typeof IntelligenceIndexRoute
+  '/priorities/': typeof PrioritiesIndexRoute
+  '/roadmap/': typeof RoadmapIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
+  '/import': typeof ImportIndexRoute
+  '/intelligence': typeof IntelligenceIndexRoute
+  '/priorities': typeof PrioritiesIndexRoute
+  '/roadmap': typeof RoadmapIndexRoute
+  '/settings': typeof SettingsIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
+  '/import/': typeof ImportIndexRoute
+  '/intelligence/': typeof IntelligenceIndexRoute
+  '/priorities/': typeof PrioritiesIndexRoute
+  '/roadmap/': typeof RoadmapIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/priorities/$priorityId'
+    | '/import/'
+    | '/intelligence/'
+    | '/priorities/'
+    | '/roadmap/'
+    | '/settings/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/priorities/$priorityId'
+    | '/import'
+    | '/intelligence'
+    | '/priorities'
+    | '/roadmap'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/priorities/$priorityId'
+    | '/import/'
+    | '/intelligence/'
+    | '/priorities/'
+    | '/roadmap/'
+    | '/settings/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  PrioritiesPriorityIdRoute: typeof PrioritiesPriorityIdRoute
+  ImportIndexRoute: typeof ImportIndexRoute
+  IntelligenceIndexRoute: typeof IntelligenceIndexRoute
+  PrioritiesIndexRoute: typeof PrioritiesIndexRoute
+  RoadmapIndexRoute: typeof RoadmapIndexRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -71,88 +127,63 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roadmap/': {
+      id: '/roadmap/'
+      path: '/roadmap'
+      fullPath: '/roadmap/'
+      preLoaderRoute: typeof RoadmapIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/priorities/': {
       id: '/priorities/'
-      path: '/priorities/'
+      path: '/priorities'
       fullPath: '/priorities/'
-      preLoaderRoute: typeof PrioritiesIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof PrioritiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intelligence/': {
+      id: '/intelligence/'
+      path: '/intelligence'
+      fullPath: '/intelligence/'
+      preLoaderRoute: typeof IntelligenceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/import/': {
+      id: '/import/'
+      path: '/import'
+      fullPath: '/import/'
+      preLoaderRoute: typeof ImportIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/priorities/$priorityId': {
       id: '/priorities/$priorityId'
       path: '/priorities/$priorityId'
       fullPath: '/priorities/$priorityId'
-      preLoaderRoute: typeof PrioritiesPriorityIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/roadmap/': {
-      id: '/roadmap/'
-      path: '/roadmap/'
-      fullPath: '/roadmap/'
-      preLoaderRoute: typeof RoadmapIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/intelligence/': {
-      id: '/intelligence/'
-      path: '/intelligence/'
-      fullPath: '/intelligence/'
-      preLoaderRoute: typeof IntelligenceIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/import/': {
-      id: '/import/'
-      path: '/import/'
-      fullPath: '/import/'
-      preLoaderRoute: typeof ImportIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/settings/': {
-      id: '/settings/'
-      path: '/settings/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof SettingsIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof PrioritiesPriorityIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-// Create and export the route tree
-
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  PrioritiesIndexRoute,
-  PrioritiesPriorityIdRoute,
-  RoadmapIndexRoute,
-  IntelligenceIndexRoute,
-  ImportIndexRoute,
-  SettingsIndexRoute,
-})
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/priorities/",
-        "/priorities/$priorityId",
-        "/roadmap/",
-        "/intelligence/",
-        "/import/",
-        "/settings/"
-      ]
-    },
-    "/": { "filePath": "index.tsx" },
-    "/priorities/": { "filePath": "priorities/index.tsx" },
-    "/priorities/$priorityId": { "filePath": "priorities/$priorityId.tsx" },
-    "/roadmap/": { "filePath": "roadmap/index.tsx" },
-    "/intelligence/": { "filePath": "intelligence/index.tsx" },
-    "/import/": { "filePath": "import/index.tsx" },
-    "/settings/": { "filePath": "settings/index.tsx" }
-  }
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  PrioritiesPriorityIdRoute: PrioritiesPriorityIdRoute,
+  ImportIndexRoute: ImportIndexRoute,
+  IntelligenceIndexRoute: IntelligenceIndexRoute,
+  PrioritiesIndexRoute: PrioritiesIndexRoute,
+  RoadmapIndexRoute: RoadmapIndexRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
 }
-ROUTE_MANIFEST_END */
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

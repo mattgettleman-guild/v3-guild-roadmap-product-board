@@ -61,8 +61,8 @@ const generalLimiter = rateLimit({
 const app = express();
 app.set("trust proxy", 1);
 const upload = multer();
-const port = Number(process.env.PORT || 5000);
-const VITE_PORT = 5173;
+const port = Number(process.env.PORT || 3001);
+const VITE_PORT = Number(process.env.VITE_PORT || 5000);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -4118,7 +4118,7 @@ runMigrations()
     console.warn("Migration warning (non-fatal):", err.message);
   })
   .then(() => {
-    app.listen(port, "0.0.0.0", () => {
+    app.listen(port, "localhost", () => {
       console.log(`Roadmap API listening on :${port} (${process.env.NODE_ENV || "development"})`);
 
       cron.schedule("0 8 * * 1", async () => {
