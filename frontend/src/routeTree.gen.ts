@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as RoadmapIndexRouteImport } from './routes/roadmap/index'
@@ -17,6 +18,11 @@ import { Route as IntelligenceIndexRouteImport } from './routes/intelligence/ind
 import { Route as ImportIndexRouteImport } from './routes/import/index'
 import { Route as PrioritiesPriorityIdRouteImport } from './routes/priorities/$priorityId'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +61,7 @@ const PrioritiesPriorityIdRoute = PrioritiesPriorityIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
   '/import/': typeof ImportIndexRoute
   '/intelligence/': typeof IntelligenceIndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
   '/import': typeof ImportIndexRoute
   '/intelligence': typeof IntelligenceIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/priorities/$priorityId': typeof PrioritiesPriorityIdRoute
   '/import/': typeof ImportIndexRoute
   '/intelligence/': typeof IntelligenceIndexRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/priorities/$priorityId'
     | '/import/'
     | '/intelligence/'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/priorities/$priorityId'
     | '/import'
     | '/intelligence'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/login'
     | '/priorities/$priorityId'
     | '/import/'
     | '/intelligence/'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   PrioritiesPriorityIdRoute: typeof PrioritiesPriorityIdRoute
   ImportIndexRoute: typeof ImportIndexRoute
   IntelligenceIndexRoute: typeof IntelligenceIndexRoute
@@ -123,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   PrioritiesPriorityIdRoute: PrioritiesPriorityIdRoute,
   ImportIndexRoute: ImportIndexRoute,
   IntelligenceIndexRoute: IntelligenceIndexRoute,

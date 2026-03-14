@@ -1,5 +1,7 @@
 import { RoadmapToolbar } from "./RoadmapToolbar";
 import { GridView } from "./GridView";
+import { GanttView } from "./GanttView";
+import { BoardView } from "./BoardView";
 import { useSearch } from "@tanstack/react-router";
 
 export function RoadmapPage() {
@@ -14,16 +16,8 @@ export function RoadmapPage() {
       <RoadmapToolbar />
       <div className="flex-1 overflow-auto">
         {search.view === "grid" && <GridView />}
-        {search.view === "gantt" && (
-          <div className="p-8 text-center text-[#9CA39A]">
-            Timeline view — coming in Phase 2
-          </div>
-        )}
-        {search.view === "board" && (
-          <div className="p-8 text-center text-[#9CA39A]">
-            Board view — coming in Phase 2
-          </div>
-        )}
+        {search.view === "gantt" && <GanttView />}
+        {search.view === "board" && <BoardView />}
       </div>
     </div>
   );

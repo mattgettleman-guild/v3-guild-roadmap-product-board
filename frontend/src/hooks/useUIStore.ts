@@ -8,6 +8,10 @@ interface UIState {
   selectedRowId: string | null;
   detailPanelOpen: boolean;
   selectRow: (id: string | null) => void;
+
+  commandPaletteOpen: boolean;
+  toggleCommandPalette: () => void;
+  setCommandPaletteOpen: (open: boolean) => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -24,6 +28,11 @@ export const useUIStore = create<UIState>()(
           selectedRowId: id,
           detailPanelOpen: id !== null,
         }),
+
+      commandPaletteOpen: false,
+      toggleCommandPalette: () =>
+        set((s) => ({ commandPaletteOpen: !s.commandPaletteOpen })),
+      setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
     }),
     {
       name: "roadmap-ui",

@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Flag, LayoutGrid, Sparkles, Upload, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { useUIStore } from "../../hooks/useUIStore";
+import { AlertsBadge } from "./AlertsBadge";
 
 const NAV_ITEMS = [
   { to: "/" as const, icon: Home, label: "Home", exact: true },
@@ -42,7 +43,7 @@ export function Sidebar() {
               className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                 isActive
                   ? "bg-amber-600 text-white"
-                  : "text-slate-400 hover:bg-[#2A2A28] hover:text-white"
+                  : "text-[#9CA39A] hover:bg-[#2A2A28] hover:text-white"
               }`}
             >
               <Icon size={16} className="shrink-0" />
@@ -52,13 +53,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <button
-        onClick={toggleSidebar}
-        className="h-10 flex items-center justify-center border-t border-[#2A2A28] text-slate-500 hover:text-white"
-      >
-        {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-      </button>
+      {/* Bottom area: alerts + collapse */}
+      <div className="border-t border-[#2A2A28]">
+        <div className="px-3 py-2">
+          <AlertsBadge />
+        </div>
+        <button
+          onClick={toggleSidebar}
+          className="w-full h-10 flex items-center justify-center text-[#9CA39A] hover:text-white transition-colors"
+        >
+          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        </button>
+      </div>
     </aside>
   );
 }

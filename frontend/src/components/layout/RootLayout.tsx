@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { DetailPanel } from "./DetailPanel";
+import { CommandPalette } from "./CommandPalette";
+import { ToastContainer } from "./Toast";
 
 export function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,6 +10,8 @@ export function RootLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       <main className="flex-1 overflow-auto">{children}</main>
       <DetailPanel />
+      <CommandPalette />
+      <ToastContainer />
     </div>
   );
 }
